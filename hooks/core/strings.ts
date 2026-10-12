@@ -33,6 +33,7 @@ export const T = {
   usageAdd: 'Usage: /cgp-follow-ups add CGP-123 [title], or a GitHub issue URL',
   notFound: (key: string) => `${key} is not in the list.`,
   added: (key: string) => `${key} added.`,
+  addedWith: (key: string, status: string, title: string) => `${key} added: ${status}${title ? ` – ${title}` : ''}.`,
   removed: (key: string) => `${key} removed.`,
   setDone: (key: string) => `${key} marked done.`,
   setOpen: (key: string) => `${key} is open again.`,

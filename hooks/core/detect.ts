@@ -131,3 +131,10 @@ export function manualItem(ref: string, title: string, now: number, jiraServer =
   if (!isIssueKey(key)) return null
   return jiraServer ? item(key, title, 'jira', now, { server: jiraServer }) : item(key, title, 'manual', now, { status: { name: 'Open', category: 'todo' } })
 }
+
+/** The read-only tracker tools the plugin calls itself to read statuses back. */
+const STATUS_READ = /^mcp__.+__(search_issues|get_issue|get_server_info)$/
+
+export function isStatusRead(tool: string): boolean {
+  return STATUS_READ.test(tool) && trackerOf(serverOf(tool)) !== null
+}

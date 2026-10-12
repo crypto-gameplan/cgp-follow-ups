@@ -5,8 +5,8 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register, Timer } from 'claude-code'
 
 import type { FollowUp, Panel } from '../types'
-import { createdByBash, createdByMcp, manualItem, serverOf, touchedBy, trackerOf } from './core/detect'
-import { addNew, feedOf, hostDraws, isDone, linkOf, marked, newRequest, sameFeed, summary, withProblem, withStatus } from './core/items'
+import { createdByBash, createdByMcp, isStatusRead, manualItem, serverOf, touchedBy, trackerOf } from './core/detect'
+import { addNew, feedOf, hostDraws, isDone, linkOf, marked, newRequest, sameFeed, shown, summary, withProblem, withStatus } from './core/items'
 import { readSettings, type Settings } from './core/settings'
 import { githubStatus, jiraStatuses, jqlFor, linearStatus, resultText, siteOf } from './core/status'
 import { T } from './core/strings'
@@ -68,6 +68,12 @@ async function mcp($: EngineInterface, server: string, tool: string, args: Recor
 
 // --- reading status back
 
+/** The first line of a failure, without the engine's `plugin: $.mcp.call(...)` prefix. */
+function problemOf(server: string, text: string): string {
+  const line = (text.split('\n')[0] ?? '').replace(/^cgp-follow-ups:\s*/, '').replace(/^\$\.mcp\.call\([^)]*\)\s*/, '')
+  return `${server}: ${line.slice(0, 100) || 'no answer'}`
+}
+
 type Answer = { key: string; status?: FollowUp['status']; title?: string; problem?: string }
 
 async function readJira($: EngineInterface, server: string, keys: string[]): Promise<Answer[]> {
@@ -90,7 +96,7 @@ async function readJira($: EngineInterface, server: string, keys: string[]): Pro
     }
     for (const key of batch) {
       const hit = found.get(key)
-      out.push(hit ? { key, status: hit.status, title: hit.title } : { key, problem: run.isError ? `${server}: ${run.text.split('\n')[0]?.slice(0, 120) ?? 'no answer'}` : `not found in ${server}` })
+      out.push(hit ? { key, status: hit.status, title: hit.title } : { key, problem: run.isError ? problemOf(server, run.text) : `not found in ${server}` })
     }
   }
   return out
@@ -332,7 +338,10 @@ async function runCommand($: EngineInterface, args: string): Promise<{ text: str
       const one = ref ? manualItem(ref, rest.join(' '), await $.clock.now(), jiraServer) : null
       if (!one) return { text: T.usageAdd }
       await addItems($, [one])
-      return { text: T.added(one.key) }
+      // Read it now, so the answer already says where it stands.
+      await sync($, [one.key]).catch(() => 0)
+      const now = (await read($, items)).find(i => i.key === one.key)
+      return { text: now ? T.addedWith(now.key, now.problem ? `not checked (${now.problem})` : shown(now).name, now.title) : T.added(one.key) }
     }
     case 'done':
     case 'reopen':
@@ -379,6 +388,13 @@ export const register: Register = (on, options) => {
       void afterTool($, tool, e as unknown as Record<string, unknown>, out).catch(() => undefined)
     }
     return ran
+  }).catch(($, e, next) => next(e))
+
+  // `$.mcp.call` goes through the permission check, and a plugin's call has no dialog to ask in: without this the
+  // tracker refuses. Only this plugin's own status reads are allowed, never a call Claude makes.
+  on('tool.check', async ($, e, next) => {
+    if (next.origin.plugin !== 'cgp-follow-ups' || !isStatusRead(e.tool) || e.ceiling === 'deny') return next(e)
+    return { decision: 'allow', reason: 'cgp-follow-ups reads the status of a tracked issue' }
   }).catch(($, e, next) => next(e))
 
   on('prompt.submit', async ($, e, next) => {

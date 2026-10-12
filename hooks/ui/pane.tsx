@@ -82,7 +82,7 @@ function actions(d: PaneDraw, i: FollowUp) {
   const link = linkOf(i, d.panel.sites)
   const done = isDone(i)
   return (
-    <Box key={`act-${i.key}`} flexDirection="row" gap={1}>
+    <Box key={`act-${i.key}`} flexDirection="row" gap={1} paddingLeft={d.isDesktop ? 3 : 2} marginTop={d.isDesktop ? 1 : 0} marginBottom={1}>
       {done ? null : <Button key={`work-${i.key}`} label={T.workOn} variant="primary" onPress={a.work} />}
       {done ? (
         <Button key={`reopen-${i.key}`} label={T.reopen} plain onPress={a.reopen} />
@@ -101,7 +101,7 @@ export function paneTree(d: PaneDraw) {
   const open = list.filter(i => !isDone(i))
   const done = list.filter(isDone)
   const footer = (
-    <Box key="foot" flexDirection="row" gap={1}>
+    <Box key="foot" flexDirection="row" gap={2} marginTop={1}>
       <Button key="sync" label={d.isSyncing ? T.syncing : T.sync} plain onPress={d.onSync} />
       {done.length ? <Button key="clear" label={T.clearDone} plain dimColor onPress={d.onClearDone} /> : null}
     </Box>
@@ -124,7 +124,9 @@ export function paneTree(d: PaneDraw) {
         <Svg source={headSvg(w, d)} alt={`${T.name}: ${syncWord(d)}`} width={w} height={HEAD_H} />
         {list.length === 0 ? <Text dimColor>{T.empty}</Text> : null}
         {list.length === 0 ? <Text dimColor>{T.addHint}</Text> : null}
-        {open.map(card)}
+        <Box key="cards" flexDirection="column" gap={1}>
+          {open.map(card)}
+        </Box>
         {doneToggle}
         {d.panel.showDone ? done.map(card) : null}
         {list.length ? footer : null}
