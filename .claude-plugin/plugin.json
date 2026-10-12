@@ -1,0 +1,30 @@
+{
+  "name": "cgp-follow-ups",
+  "version": "1.0.0",
+  "description": "Keeps the follow-up issues of your session in view: every issue Claude creates in Jira, GitHub or Linear is tracked, its status follows the tracker by itself, and a row in the CGP bar shows what is still open. By Crypto Gameplan.",
+  "author": {
+    "name": "Crypto Gameplan",
+    "url": "https://github.com/crypto-gameplan"
+  },
+  "homepage": "https://github.com/crypto-gameplan/cgp-follow-ups",
+  "repository": "https://github.com/crypto-gameplan/cgp-follow-ups",
+  "license": "MIT",
+  "keywords": ["follow-ups", "jira", "github", "issues", "mod"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "syncEvery": {
+      "type": "string",
+      "title": "Sync every",
+      "description": "How often open follow-ups are read back from Jira, GitHub or Linear. They are also read right after Claude creates or changes one, when you send a prompt, and when you open the panel.",
+      "default": "5 min",
+      "options": ["2 min", "5 min", "15 min", "off"]
+    },
+    "bar": {
+      "type": "string",
+      "title": "Bar above the prompt",
+      "description": "on: a row shows the open follow-ups while there are any (inside the CGP Effort bar when that is installed). off: only the panel and /cgp-follow-ups.",
+      "default": "on",
+      "options": ["on", "off"]
+    }
+  }
+}
