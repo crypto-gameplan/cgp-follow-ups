@@ -93,7 +93,7 @@ test('a Jira issue Claude creates is tracked, read back without a permission pro
   await w.clock.settle()
   await $.tool.call({ tool: 'mcp__jira__create_issue', projectKey: 'CGP', issueType: 'Task', summary: 'Fix lock retry' } as never)
   await w.clock.settle()
-  expect(w.toasts).toContain('Follow-up tracked: CGP-800 – Fix lock retry')
+  expect(w.toasts).toContain('Follow-up tracked: CGP-800: Fix lock retry')
   await w.clock.advance(3_000)
   await w.clock.settle()
   expect(w.calls.some(c => c.server === 'jira' && c.tool === 'search_issues' && String(c.args.jql) === 'key in (CGP-800)')).toBe(true)

@@ -1,6 +1,6 @@
 {
   "name": "cgp-follow-ups",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Keeps the follow-up issues of your session in view: every issue Claude creates in Jira, GitHub or Linear is tracked, its status follows the tracker by itself, and a row in the CGP bar shows what is still open. By Crypto Gameplan.",
   "author": {
     "name": "Crypto Gameplan",

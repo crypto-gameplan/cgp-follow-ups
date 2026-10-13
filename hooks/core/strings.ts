@@ -23,7 +23,7 @@ export const T = {
   synced: (when: string) => `synced ${when}`,
   neverSynced: 'not synced yet',
   marked: 'marked by you',
-  tracked: (key: string, title: string) => `Follow-up tracked: ${key}${title ? ` – ${title}` : ''}`,
+  tracked: (key: string, title: string) => `Follow-up tracked: ${key}${title ? `: ${title}` : ''}`,
   trackedMany: (keys: string[]) => `${keys.length} follow-ups tracked: ${keys.join(', ')}`,
   nowDone: (key: string) => `${key} is done`,
   counts: (todo: number, doing: number, done: number) =>
@@ -33,7 +33,7 @@ export const T = {
   usageAdd: 'Usage: /cgp-follow-ups add CGP-123 [title], or a GitHub issue URL',
   notFound: (key: string) => `${key} is not in the list.`,
   added: (key: string) => `${key} added.`,
-  addedWith: (key: string, status: string, title: string) => `${key} added: ${status}${title ? ` – ${title}` : ''}.`,
+  addedWith: (key: string, status: string, title: string) => `${key} added (${status})${title ? `: ${title}` : ''}`,
   removed: (key: string) => `${key} removed.`,
   setDone: (key: string) => `${key} marked done.`,
   setOpen: (key: string) => `${key} is open again.`,

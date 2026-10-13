@@ -2,6 +2,8 @@
 
 A Claude Code plugin by [Crypto Gameplan](https://github.com/crypto-gameplan). It keeps the follow-up issues of your session in view. Every issue Claude creates in Jira, GitHub or Linear is tracked. Its status follows the tracker by itself, and a row above the prompt shows what is still open.
 
+How everything works, in detail: [docs/GUIDE.md](docs/GUIDE.md). The same as a PDF is attached to every release ([latest](https://github.com/crypto-gameplan/cgp-follow-ups/releases/latest/download/CGP-Follow-ups-Guide.pdf)). In Claude Code you can also just ask, for example "why does an issue say Not checked?": the plugin brings a skill that answers from the guide.
+
 ## Install
 
 CGP Follow-ups is listed in the Crypto Gameplan marketplace ([crypto-gameplan/cgp-marketplace](https://github.com/crypto-gameplan/cgp-marketplace)). In Claude Code, run:

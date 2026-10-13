@@ -13,8 +13,13 @@ Layout of `hooks/`:
 
 Conventions:
 - UI text is English and lives in `hooks/core/strings.ts`.
-- Statuses are read with `$.mcp.call`, never `$.tool.call`: the latter goes through the permission dialog.
+- Statuses are read with `$.mcp.call`. It goes through the permission check like any tool call and a plugin's call has no dialog, so the `tool.check` hook allows exactly the plugin's own `search_issues`, `get_issue` and `get_server_info` calls (`isStatusRead` in `core/detect.ts`), never Claude's.
 - Every gating hook ends in `.catch(($, e, next) => next(e))`, and every fire-and-forget promise has a `.catch`.
 - SVG is drawn only when `e.surface === 'desktop'` and the surface has an `Svg` element.
 - Shared bar with cgp-effort: `cgp-follow-ups.feed` (format `FEED_VERSION` in `core/items.ts`) is read by cgp-effort's `hooks/ui/follow.tsx`. cgp-effort answers with `cgp-effort.followHost` and passes presses back through `cgp-effort.followRequest`. Change the feed shape only together with a new version on both sides.
 - Colours match cgp-effort and cgp-crew: CGP gold `#ffab19` for in progress, green for done.
+
+Guide:
+- `docs/GUIDE.md` is the reference the `cgp-follow-ups-help` skill answers from. Change it with every change a user can see.
+- On a version bump, run `node tools/sync-version.mjs docs/GUIDE.md .claude-plugin/plugin.json` so its version line follows.
+- The PDF is built from `../cgp-follow-ups-docs/guide/guide.html` with the cgp-guide skill and attached to the GitHub release as `CGP-Follow-ups-Guide.pdf`.

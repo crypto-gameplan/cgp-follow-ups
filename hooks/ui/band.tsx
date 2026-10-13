@@ -71,8 +71,8 @@ export function bandTree(d: BandDraw) {
   const hide = <Button key="fu-hide" plain role="dismiss" label="✕" onPress={d.onHide} />
   if (d.isDesktop && d.Svg) {
     const Svg = d.Svg
-    // About 8 CSS px per column, less the two buttons and their gaps.
-    const width = Math.max(200, Math.min(1600, (d.columns || 100) * 8 - 130))
+    // About 8 CSS px per column, less the two buttons ("Follow-ups n" is the wider one), their gaps and the slot padding.
+    const width = Math.max(200, Math.min(1600, (d.columns || 100) * 8 - 210))
     return (
       <Box flexDirection="row" alignItems="center" gap={1}>
         <Svg source={bandSvg(feed, width)} alt={`${T.paneTitle}: ${countsText(feed)}`} width={width} height={ROW_H} />
